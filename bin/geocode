@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+require 'trollop'
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'geocode'))
+
+config_file = ["./geocode.yml", "~/.geocode/geocode.yml"].map {|p| File.expand_path(p)}.find {|p| File.exists? p}
+
+config = config_file ? YAML::load_file(config_file) : {}
+config.each { |k,v| config[k.to_sym] = v}
+
+opts = Trollop.options do
+  opt :google_api_key, "API KEY to use", :default => nil
+  opt :service, "Geocoding Service to use", :default => nil
+  opt :reverse, "Reverse geocode", :type => :boolean, :default => false
+  opt :latlng, "Geocode to lat,lng (default)", :type => :boolean, :default => true
+end
+
+opts[:google_api_key] ||= config[:google_api_key] || ""
+opts[:service] ||= config[:service] || "google"
+opts[:service] = opts[:service].to_sym
+
+# reverse geocoding is not compatible with latlng
+if opts[:reverse] && opts[:latlng]
+  opts[:latlng] = false
+end
+
+# geocode the address or lat/lng given
+g = Geocode.new_geocoder(opts[:service], opts)
+if opts[:latlng]
+  puts g.geocode(ARGV * ' ').latlng * ','
+else opts[:reverse]
+  puts g.reverse_geocode(ARGV * ' ').address
+end

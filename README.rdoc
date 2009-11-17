@@ -1,0 +1,62 @@
+= geocode
+
+Yet another geoding library. Initial version geocodes using Google
+only but I plan to extend it to use Yahoo and possibly Tiger/Line.
+
+= Examples
+
+== Command-Line
+
+Geocode an address using google:
+
+  geocode -s google -g abcd1234_SAMPLE_GOOGLE_API_KEY_etc 1600 Amphitheatre Parkway, Mountain View, CA
+  # => 37.421759,-122.08437
+
+Reverse geocode a lat/lng (with google api key set in configuration file):
+
+  geocode -r 37.421759,-122.08437
+  # => 1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA
+
+== Ruby
+
+  g = Geocode.new_geocoder :google, {:google_api_key => "abcd1234_SAMPLE_GOOGLE_API_KEY_etc"}
+  result1 = g.geocode "1600 Amphitheatre Parkway, Mountain View, CA"
+  result2 = g.reverse_geocode "37.421759,-122.08437"
+
+result1 and result2 are hashes with the following extension functions added in:
+
+  result.success? # true if the geocode/reverse_geocode succeeded.
+  result.error? # opposite of success.
+  result.latlng # array of 2 floats, [latitude, longitude], returned by geocode.
+  result.address # string containing the address returned by reverse_geocode.
+
+= Installation
+
+  gem install geocode
+
+= Configuration (Command-Line)
+
+You can create a configuration file in ~/.geocode called geocode.yml.
+It's a handy place to put your Google API key, for example. You can
+also place geocode.yml in the current directory if you don't want to
+place it in your home folder. A sample file would look like:
+
+  ---
+  service: google
+  google_api_key: abcd1234_SAMPLE_GOOGLE_API_KEY_etc
+
+
+= TOS WARNING
+
+The Google geocoding service uses the Google Map API and thus you are
+bound by their Terms of Service. Most notably, this says that you MAY
+NOT "use or display the Content without a corresponding Google map".
+There are specific exceptions to this rule but be aware.
+
+= Authors
+
+* David Brady <github@shinybit.com>
+
+= License
+
+MIT.
