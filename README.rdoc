@@ -3,6 +3,7 @@
 Yet another geoding library. Initial version geocodes using Google
 only but I plan to extend it to use Yahoo and possibly Tiger/Line.
 
+
 = Examples
 
 == Command-Line
@@ -30,9 +31,14 @@ result1 and result2 are hashes with the following extension functions added in:
   result.latlng # array of 2 floats, [latitude, longitude], returned by geocode.
   result.address # string containing the address returned by reverse_geocode.
 
+
 = Installation
 
   gem install geocode
+
+Ideally, then create ~/.geocode and in it, write a geocode.yml file
+containing your google API key. See Configuration below for details.
+
 
 = Configuration (Command-Line)
 
@@ -53,10 +59,45 @@ bound by their Terms of Service. Most notably, this says that you MAY
 NOT "use or display the Content without a corresponding Google map".
 There are specific exceptions to this rule but be aware.
 
+
 = Authors
 
 * David Brady <github@shinybit.com>
 
+
 = License
 
-MIT.
+MIT. See MIT-LICENSE file for details.
+
+
+= TODO
+
+== Caching
+Google STRONGLY recommends caching geocoded data. For now, caching is
+the responsibility of the client using the geocode library. Eventually
+I'd like to just include a caching strategy and/or caching object to
+Geocode.new_geocoder(). This hides the caching strategy from the
+geocoding client.
+
+Possible implementations might include defining internal strategies
+(give me a sqlite3 file, or an ActiveRecord connection, or the address
+of a memcached server, etc) or creating a cache object API and passing
+that in.
+
+== Helpful Creation of geocode.yml
+It is not unreasonable to expect a new geocode user to do this:
+
+  $ sudo gem install geocode
+  $ geocode 123 Some Address
+
+This will fail because there's no Google API configured. It would be
+nice to throw up an error message telling the user to create the
+geocode.yml file. Optionally it should even offer to create ~/.geocode
+and write the file there with a default API key.
+
+== Better error handling
+Remember the user from the step above? So he runs it and it creates
+the default settings file with a sample API key. So he runs it again
+without editing the file. The app should make it clear that the sample
+API key needs to be edited. Or at the very least it should report
+whatever error Google returns when an invalid API key is used.
