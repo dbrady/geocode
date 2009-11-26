@@ -1,0 +1,15 @@
+= Version 0.2.0 - 2009-11-25
+* Added --viewport (map extents)
+* Added --accuracy
+* Changed dump to YAML (MUCH more readable!)
+* Added field labels
+* Added --quiet to turn off said labels
+
+
+
+= Version 0.1.0 - 2009-11-17 
+* Initial release
+* geocode --latlng to get lat,lng
+* geocode --reverse to get address
+* google service only
+

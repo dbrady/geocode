@@ -32,6 +32,58 @@ result1 and result2 are hashes with the following extension functions added in:
   result.address # string containing the address returned by reverse_geocode.
 
 
+= Options
+
+== --help, -h
+Get the most up to date help.
+
+== --service, -s
+Which service to use. Can be configured in geocode.yml. Currently only
+google is supported.
+
+== --google-api-key, -g
+Your google API key. Can be configured in geocode.yml.
+
+==  --latlng, -l
+Displays the lat/lng of the given address.
+
+Default information to display, on by default if no other display mode
+is selected.
+
+== --viewport, -v
+Displays the map viewport extends (bounding box) of the given address.
+
+== --accuracy, -a
+Displays the geocoding accuracy.
+
+== --reverse, -r
+Reverse geocodes a lat/lng to an address. Not compatible with
+--latlng, --viewport or --accuracy; if any of those options are also
+set they will be disabled.
+
+Note: If you input a negative latitude from the command line, Trollop
+tries to interpret this as an argument to the program. You should move
+to the Northern Hemisphere. As a temporary workaround, however, you
+can use '--' to tell Trollop to stop processing arguments, e.g.
+
+  $ geocode -r -- -23.548943,-46.638818
+  Address: Av. Vinte e Três de Maio, 149-165 - República, São Paulo - SP, 01316-060, Brazil
+
+== --dump, -d
+Geocodes (or reverse geocodes) the address and then dumps the returned
+object. Use this to noodle around in the geocode result object for
+other data.
+
+== --quiet, -q
+Turns off label printing. Useful when geocode is part of an external
+toolchain, e.g.
+
+  $ echo The President lives at $(geocode -q 1600 Pennsylvania Ave, Charleston, WV 25302)
+
+For example, I produced that full address with:
+
+  $ geocode -r $(geocode -q 1600 Pennsylvania Ave)
+
 = Installation
 
   gem install geocode
@@ -84,6 +136,11 @@ Possible implementations might include defining internal strategies
 of a memcached server, etc) or creating a cache object API and passing
 that in.
 
+UPDATE: As a command-line introspection/visualizing tool, caching is
+pretty much useless. I'm burying this for now until and unless
+somebody decides they want to use this as part of a toolchain or as a
+library.
+
 == Helpful Creation of geocode.yml
 It is not unreasonable to expect a new geocode user to do this:
 
@@ -101,3 +158,9 @@ the default settings file with a sample API key. So he runs it again
 without editing the file. The app should make it clear that the sample
 API key needs to be edited. Or at the very least it should report
 whatever error Google returns when an invalid API key is used.
+
+== Open A Map 
+As I use geocode as a debugging and introspection tool, I keep wanting
+to jump to a map to visualize the results. Consider emitting the uri
+to a map using the Google static map API.
+

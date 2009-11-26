@@ -1,5 +1,6 @@
 require 'net/http'
 require 'json'
+require 'yaml'
 
 class GoogleGeocode
   attr_reader :api_key
@@ -23,7 +24,7 @@ class GoogleGeocode
       end
       
       def dump
-        inspect
+        self.to_yaml
       end
       
       def latlng
@@ -32,6 +33,15 @@ class GoogleGeocode
 
       def address
         self["Placemark"][0]["address"]
+      end
+
+      def accuracy
+        self["Placemark"][0]["AddressDetails"]["Accuracy"]
+      end
+      
+      # returns viewport in tlbr format
+      def viewport
+        vp = [:north, :west, :south, :east].map {|dir| self["Placemark"][0]["ExtendedData"]["LatLonBox"][dir.to_s] }
       end
     end
     result
