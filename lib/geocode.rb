@@ -1,10 +1,11 @@
-require File.expand_path(File.join(File.dirname(__FILE__), 'google_geocode'))
+require File.expand_path(File.join(File.dirname(__FILE__), 'google', 'geocode'))
+require File.expand_path(File.join(File.dirname(__FILE__), 'google', 'result'))
 
 class Geocode
   def self.new_geocoder(service, options)
     case service
     when :google
-      GoogleGeocode.new options[:google_api_key]
+      Google::Geocode.new options[:google_api_key]
     else
       raise "Unsupported geocode service: #{service}"
     end

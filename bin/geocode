@@ -19,6 +19,8 @@ opts = Trollop.options do
   opt :viewport, "Show viewport (map extents) of location", :type => :boolean, :default => false
   opt :accuracy, "Show accuracy level of geocoded location", :type => :boolean, :default => false
   opt :dump, "Dump the geocoded results", :type => :boolean, :default => false
+  # TODO: Show this in metric as well as Burmese Units...
+  opt :miles, "Show the viewport size in miles", :type => :boolean, :default => false
   opt :quiet, "Don't show labels", :type => :boolean, :default => false
 end
 
@@ -32,10 +34,11 @@ if opts[:reverse] && opts[:latlng]
   opts[:latlng] = false
   opts[:viewport] = false
   opts[:accuracy] = false
+  opts[:miles] = false
 end
 
 # Default latlng to true if no other options have been given
-opts[:latlng] = true unless [:reverse, :viewport, :accuracy].any? { |option| opts[option] }
+opts[:latlng] = true unless [:miles, :reverse, :viewport, :accuracy].any? { |option| opts[option] }
 
 
 # geocode the address or lat/lng given
@@ -56,6 +59,11 @@ if opts[:viewport]
   print 'Viewport: ' unless opts[:quiet]
   vp = geo.viewport
   puts "%f,%f %f,%f" % vp
+end
+
+if opts[:miles]
+  print 'Viewport Height (miles): ' unless opts[:quiet]
+  puts "%f" % geo.viewport_height
 end
   
 if opts[:accuracy]
