@@ -1,5 +1,8 @@
 require 'json'
 
+# TODO: Refactor this up to an abstract parent class in ../result.rb
+# so we can use e.g. Yahoo maps or Tiger/LINE data.
+
 module Google
   class Result
     attr_accessor :data
@@ -24,6 +27,14 @@ module Google
       data["Placemark"][0]["Point"]["coordinates"][0..1].reverse
     end
 
+    def lat
+      data["Placemark"][0]["Point"]["coordinates"][1]
+    end
+
+    def lng
+      data["Placemark"][0]["Point"]["coordinates"][0].reverse
+    end
+
     def address
       data["Placemark"][0]["address"]
     end
@@ -39,7 +50,7 @@ module Google
     
     def viewport_height
       vp = viewport
-      vs = (vp[0] - vp[2]) * 67.0
+      vs = (vp[0] - vp[2]) * ::Geocode::MILES_PER_DEGREE_LATITUDE
     end
 
   end

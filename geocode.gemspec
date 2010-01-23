@@ -22,7 +22,8 @@ spec = Gem::Specification.new do |s|
     "README.rdoc",
     "bin/geocode",
     "lib/geocode.rb",
-    "lib/google_geocode.rb"
+    "lib/google/geocode.rb",
+    "lib/google/result.rb"
   ]
 end
 

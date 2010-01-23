@@ -19,6 +19,8 @@ opts = Trollop.options do
   opt :viewport, "Show viewport (map extents) of location", :type => :boolean, :default => false
   opt :accuracy, "Show accuracy level of geocoded location", :type => :boolean, :default => false
   opt :dump, "Dump the geocoded results", :type => :boolean, :default => false
+  opt :distance, "Distance between locations. Requires 2nd address or lat/lng pair; separate with :", :type => :boolean, :default => false
+  opt :bearing, "Bearing (forward azimuth) to second location.Requires 2nd address or lat/lng pair; separate with :", :type => :boolean, :default => false
   # TODO: Show this in metric as well as Burmese Units...
   opt :miles, "Show the viewport size in miles", :type => :boolean, :default => false
   opt :quiet, "Don't show labels", :type => :boolean, :default => false
@@ -44,39 +46,59 @@ opts[:latlng] = true unless [:miles, :reverse, :viewport, :accuracy].any? { |opt
 # geocode the address or lat/lng given
 g = Geocode.new_geocoder(opts[:service], opts)
 
-geo = if opts[:reverse]
-        g.reverse_geocode(ARGV * ' ')
-      else
-        g.geocode(ARGV * ' ')
-      end
+argv1, argv2 = ARGV.join(' ').split(/:/, 2)
+
+geo1 = if opts[:reverse]
+         g.reverse_geocode(argv1)
+       else
+         g.geocode(argv1)
+       end
+
+if argv2
+  geo2 = if opts[:reverse]
+           g.reverse_geocode(argv2)
+         else
+           g.geocode(argv2)
+         end
+end
 
 if opts[:latlng]
   print 'Location: ' unless opts[:quiet]
-  puts "%f,%f" % geo.latlng
+  puts "%f,%f" % geo1.latlng
 end
 
 if opts[:viewport]
   print 'Viewport: ' unless opts[:quiet]
-  vp = geo.viewport
+  vp = geo1.viewport
   puts "%f,%f %f,%f" % vp
 end
 
 if opts[:miles]
   print 'Viewport Height (miles): ' unless opts[:quiet]
-  puts "%f" % geo.viewport_height
+  puts "%f" % geo1.viewport_height
 end
   
 if opts[:accuracy]
   print 'Accuracy: ' unless opts[:quiet]
-  puts geo.accuracy
+  puts geo1.accuracy
 end
   
 if opts[:reverse]
   print 'Address: ' unless opts[:quiet]
-  puts geo.address
+  puts geo1.address
 end
 
 if opts[:dump]
   puts 'Dump: ' unless opts[:quiet]
-  puts geo.dump
+  puts geo1.dump
+end
+
+if opts[:bearing]
+  puts 'Bearing: ' unless opts[:quiet]
+  puts geo1.bearing_to(geo2)
+end
+
+if opts[:distance]
+  puts 'Distance: ' unless opts[:quiet]
+  puts geo1.distance_to(geo2)
 end
