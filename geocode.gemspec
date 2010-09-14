@@ -16,13 +16,12 @@ spec = Gem::Specification.new do |s|
 
 
   # ruby -rpp -e "pp (Dir['{README*,*LICENSE*,CHANGELOG*,{examples,lib,protocol,spec}/**/*.{rdoc,json,rb,txt,xml,yml}}'] + Dir['bin/*']).map.sort"
-  s.files = [
-    "CHANGELOG.rdoc",
+  s.files = ["CHANGELOG.rdoc",
     "MIT-LICENSE",
     "README.rdoc",
     "bin/geocode",
     "lib/geocode.rb",
-    "lib/google_geocode.rb"
-  ]
+    "lib/google/geocode.rb",
+    "lib/google/result.rb"]
 end
 
