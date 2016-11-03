@@ -10,7 +10,7 @@ module Google
     end
 
     def do_geocode(location)
-      url = "http://maps.google.com/maps/geo?sensor=false&key=#{@api_key}&output=json&q=#{location}&client=#{@client}"
+      url = "https://maps.googleapis.com/maps/api/geocode/json?sensor=false&key=#{@api_key}&output=json&address=#{location}&client=#{@client}"
       resp = Net::HTTP.get_response(URI.parse(url))
       data = resp.body
 
