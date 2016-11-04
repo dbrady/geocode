@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name = 'geocode'
-  s.version = '0.2.1'
+  s.version = '0.2.2'
   s.date = '2010-09-14'
   s.summary = 'Geocoding library and CLI tool'
   s.email = "github@shinybit.com"
